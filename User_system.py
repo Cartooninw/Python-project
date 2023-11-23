@@ -174,6 +174,5 @@ class ATM_User_system:
       self.balance = self.load.loc[self.load["ID"] == username,"Balance"].item()
       print(f"\nYou have {self.balance } Dollar in the bank.")
     except ValueError:
-      traceback.print_exc()
       print("Please Login before checking balance.")
 

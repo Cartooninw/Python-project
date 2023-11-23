@@ -236,6 +236,9 @@ def Login():
                         data.loc[data["ID"] == split_login[0],"Locked"] = 1
                         data.to_excel("atmdata.xlsx",index=False,engine="openpyxl")
                         print("Your account has been locked. please notify directly to the bank.")
+                        return "Faillogin"
+                        BreakLoopanywhereyouwant = False
+                        break
                 else:
                     if Login ==  "Failid":
                         print("Connecting to register." ,end="\r")
@@ -260,8 +263,11 @@ def Login():
                         break
                     elif Login ==  "Faillocked":
                         print("Your account has been locked. please notify directly to the bank.")
+                        return "Faillogin"
+                        BreakLoopanywhereyouwant = False
                         break
                     else:
+                        return "Faillogin"
                         BreakLoopanywhereyouwant = False
                         break
 

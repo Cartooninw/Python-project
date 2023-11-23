@@ -8,7 +8,7 @@ import os
 #Variable Declaration
 member = ["yes","no"]
 yes_options = "yes"
-items = {"shirt":5,"shoes":30,"foods":2,"monkey paw":100,"crucifix":20,"curse items":340,"Music Box":10,"Another monkey paw":100,"And monkey paw":100,"water":1,"fruits":1}
+items = {"shirt":5,"shoes":30,"foods":2,"item4":100,"item5":20,"item6":340,"item7":10,"item8":100,"item9":100,"water":1,"fruits":1}
 items_list = list(key.lower() for key in items.keys())
 items_price = list(items.values())
 shipping_charge = 0 
@@ -139,53 +139,63 @@ def main():
                         if shipfee != "cancel":
                             # summary and calculate all price 
                             while Logined:
-                                membership = SHOPDATA.loc[SHOPDATA["username"]==login[0],"member"].item()
-                                ATM.Login()
-                                ATMDATA = pd.read_excel(User_system.cur_path + "/atmdata.xlsx",engine="openpyxl")
-                                ATM_USER = ATM.Username
-                                balance = ATMDATA.loc[ATMDATA["ID"]==ATM_USER,"Balance"].item()
-                                
-                                if membership == True:
-                                    print("working")
-                                    items_amount.append(-(0.2*sum(items_amount)))
-                                    print(items_amount)
-                                else:
-                                    if balance >= 2000 :
-                                        balance = register_membership(login[0],balance)
-                                        ATMDATA.loc[ATMDATA["ID"]==ATM_USER,"Balance"] = balance
-                                        ATMDATA.to_excel(User_system.cur_path + "/atmdata.xlsx",index=False,engine="openpyxl")
-                                        items_amount.append(0)
-                                    else:
-                                        print("You're broke shit")
-                                        items_amount.append(0)
-                                        pass
-                                while True:
+                                Login_ATM = ATM.Login()
+                                if Login_ATM != "Faillogin":
+                                    membership = SHOPDATA.loc[SHOPDATA["username"]==login[0],"member"].item()
                                     ATMDATA = pd.read_excel(User_system.cur_path + "/atmdata.xlsx",engine="openpyxl")
-                                    Cash = ATMDATA.loc[ATMDATA["ID"] == ATM_USER,"Cash"].item()
-                                    Total = sum(items_amount) 
-                                    print(f"Your items price is {Total - items_amount[-1]}\nYour discount is {-items_amount[-1]}\ndistance is {distance:.2f}\nYour shipping rate is {shipping_charge}\nTotal is:{Total + shipping_charge}")
-                                    if Cash >= (Total+shipping_charge):
-                                        print(f"ordered successful")
-                                        Cash -= Total
-                                        ATMDATA.loc[ATMDATA["ID"] == ATM_USER ,"Cash"] = Cash
-                                        ATMDATA.to_excel(User_system.cur_path + "/atmdata.xlsx" ,index=False, engine="openpyxl")
-                                        ATM.Username = None
-                                        items_amount.clear()
-                                        basket.clear()
-                                        Main2 = False
-                                        Logined = False
-                                        break
+                                    ATM_USER = ATM.Username
+                                    balance = ATMDATA.loc[ATMDATA["ID"]==ATM_USER,"Balance"].item()
+                                    
+                                    if membership == True:
+                                        print("working")
+                                        items_amount.append(-(0.2*sum(items_amount)))
+                                        print(items_amount)
                                     else:
-                                        print(f"Your cash isn't enough.\nYou have {Cash} available \nPlease add your cash.")
-                                        #Active ATM increase crash
-                                        ADDCASH = input("Do want to add your cash? y/n:")
-                                        if ADDCASH == "y":
-
-                                            ATM.withdraw(ATM_USER)
+                                        if balance >= 2000 :
+                                            balance = register_membership(login[0],balance)
+                                            if balance == "no":
+                                                items_amount.append(0)
+                                                pass
+                                            else:
+                                                ATMDATA.loc[ATMDATA["ID"]==ATM_USER,"Balance"] = balance
+                                                ATMDATA.to_excel(User_system.cur_path + "/atmdata.xlsx",index=False,engine="openpyxl")
+                                                items_amount.append(-(0.2*sum(items_amount)))
                                         else:
+                                            print("You're broke shit")
+                                            items_amount.append(0)
+                                            pass
+                                    while True:
+                                        ATMDATA = pd.read_excel(User_system.cur_path + "/atmdata.xlsx",engine="openpyxl")
+                                        Cash = ATMDATA.loc[ATMDATA["ID"] == ATM_USER,"Cash"].item()
+                                        Total = sum(items_amount) 
+                                        print(f"Your items price is {Total - items_amount[-1]}\nYour discount is {-items_amount[-1]}\ndistance is {distance:.1f}\nYour shipping rate is {shipping_charge}\nTotal is:{Total + shipping_charge}")
+                                        if Cash >= (Total+shipping_charge):
+                                            print(f"ordered successful")
+                                            Cash -= (Total+shipping_charge)
+                                            ATMDATA.loc[ATMDATA["ID"] == ATM_USER ,"Cash"] = Cash
+                                            ATMDATA.to_excel(User_system.cur_path + "/atmdata.xlsx" ,index=False, engine="openpyxl")
+                                            ATM.Username = None
+                                            items_amount.clear()
+                                            basket.clear()
                                             Main2 = False
                                             Logined = False
                                             break
+                                        else:
+                                            print(f"Your cash isn't enough.\nYou have {Cash} available \nPlease add your cash.")
+                                            #Active ATM increase crash
+                                            ADDCASH = input("Do want to add your cash? y/n:")
+                                            if ADDCASH == "y":
+
+                                                ATM.withdraw(ATM_USER)
+                                            else:
+                                                Main2 = False
+                                                Logined = False
+                                                break
+                                else:
+                                    items_amount.clear()
+                                    basket.clear()
+                                    Main2 = False
+                                    break
                         else:
                             print("Distance is so far, ordered cancelled")
                             break
