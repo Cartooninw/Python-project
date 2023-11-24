@@ -89,7 +89,7 @@ def main():
                 SHOPDATA = pd.read_excel(User_system.cur_path + "/users.xlsx",engine="openpyxl")
                 #random distance because it's tester
                 distance = random.uniform(0.00 , 20.00)
-                Login_input = input("Enter Your Username/Password (Leave a space for register/leave):")
+                Login_input = input("Enter Your Username/Password \n(Enter password as '$CHANGEPASSWORD$' for change password)\n(Leave a space for register/leave)\n:")
                 
                 if Login_input in "                                 ":
                     Speicific = input("\nEnter leave to leave\nEnter Register to register\n:")
@@ -188,6 +188,8 @@ def main():
 
                                                 ATM.withdraw(ATM_USER)
                                             else:
+                                                items_amount.clear()
+                                                basket.clear()
                                                 Main2 = False
                                                 Logined = False
                                                 break

@@ -75,7 +75,7 @@ class shop_User_system:
         return "pass"
       else:
         #check password if password was a space
-        if password in "                     ":
+        if password in "$CHANGEPASSWORD$":
           pwc = input("Enter your password separated by (oldpass/newpass):")
           pwin = pwc.split(" ")
           #loop until oldpassword has been enter right password
@@ -92,7 +92,7 @@ class shop_User_system:
               pwc = input("Enter your password separated by (oldpass/newpass) back to login by a space:")
               pwin = pwc.split(" ") 
               #if it's a space back to login
-              if pwc == " ":
+              if pwc == "     ":
                 return "login"
         else:
           print("Wrong Password!")
